@@ -1,0 +1,99 @@
+:root {
+  --sidebar-w: 260px;
+  --topbar-h: 60px;
+
+  --color-bg:       #f9f0e5;        /* couleur principale */
+  --color-bg-dark:  #f0d9be;        /* Légèrement plus sombre pour hover */
+  --color-bg-brand: #e8c9a0;        /* Ton chaud pour la brand zone */
+  --color-active:   #a0522d;        /* Sienna — actif/accent */
+  --color-active-bg:#f5deb3;        /* Wheat — fond lien actif */
+  --color-text:     #4a3728;        /* Brun foncé — texte principal */
+  --color-muted:    #9e7e6a;        /* Texte secondaire */
+  --color-border:   #ddc9b2;        /* Bordures subtiles */
+  --color-footer:   #ecdcc9;        /* Footer légèrement distinct */
+
+  --font-main: 'Nunito', sans-serif;
+  --radius: 10px;
+  --transition: .22s ease;
+}
+
+body{
+    background-color: var(--color-bg);
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+.container{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box{
+
+    width: 400px;
+    padding: 90px;
+
+    background: #ecdcc9;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+
+    border: 1px solid #ddc9b2;
+
+    color: #4a3728;
+}
+
+.form-control{
+
+    background: #ecdcc9;
+    border: 1px solid #ddc9b2;
+    color: #4a3728;
+}
+
+.form-control::placeholder{
+    color: #9e7e6a;
+}
+
+.form-control:focus{
+
+    background: #ecdcc9;
+    color: #4a3728;
+
+    box-shadow: none;
+}
+
+label{
+    color: #4a3728;
+}
+
+h2{
+    color: #4a3728;
+}
+
+.btn-primary{
+    background-color:#a0522d;
+    border: none;
+}
+
+.btn-primary:hover{
+    background-color: #f0d9be;
+}
+
+h2{
+    font-size: 22px;
+}
+
+label{
+    font-size: 14px;
+}
+
+.form-control{
+    font-size: 14px;
+}
+
+.btn{
+    font-size: 14px;
+}

@@ -1,0 +1,250 @@
+
+
+/* ── Variables ── */
+:root {
+  --sidebar-w: 260px;
+  --topbar-h: 60px;
+
+  --color-bg:       #faebd7;        /* couleur principale */
+  --color-bg-dark:  #f0d9be;        /* Légèrement plus sombre pour hover */
+  --color-bg-brand: #e8c9a0;        /* Ton chaud pour la brand zone */
+  --color-active:   #a0522d;        /* Sienna — actif/accent */
+  --color-active-bg:#f5deb3;        /* Wheat — fond lien actif */
+  --color-text:     #4a3728;        /* Brun foncé — texte principal */
+  --color-muted:    #9e7e6a;        /* Texte secondaire */
+  --color-border:   #ddc9b2;        /* Bordures subtiles */
+  --color-footer:   #ecdcc9;        /* Footer légèrement distinct */
+
+  --font-main: 'Nunito', sans-serif;
+  --radius: 10px;
+  --transition: .22s ease;
+}
+
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-main);
+  background: #fdf6ee;
+  color: var(--color-text);
+  margin: 0;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--color-bg);
+  border-right: 1px solid var(--color-border);
+  z-index: 1040;
+  transition: transform var(--transition);
+  box-shadow: 2px 0 12px rgba(100, 60, 20, .08);
+}
+
+.sidebar-brand {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-brand);
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--color-active);
+  color: #fff;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-active);
+  letter-spacing: -.3px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition);
+}
+
+.sidebar-link i {
+  font-size: 18px;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+  color: var(--color-muted);
+  transition: color var(--transition);
+}
+
+.sidebar-link:hover {
+  background: var(--color-bg-dark);
+  color: var(--color-active);
+}
+
+.sidebar-link:hover i {
+  color: var(--color-active);
+}
+
+.sidebar-link.active {
+  background: var(--color-active-bg);
+  color: var(--color-active);
+  font-weight: 700;
+}
+
+.sidebar-link.active i {
+  color: var(--color-active);
+}
+
+/* ── Footer utilisateur ── */
+.sidebar-footer {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-footer);
+}
+
+.avatar-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-active);
+  color: #fff;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* le nom d'utilisateur */
+.user-name {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--color-text) !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+}
+
+.user-role {
+  font-size: 11px;
+  color: var(--color-muted);
+  display: block;
+}
+
+/* Bouton de déconnexion */
+.btn-deconnexion {
+  background: transparent;
+  border: 1.5px solid var(--color-active);
+  color: var(--color-active);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  padding: 7px 12px;
+  transition: background var(--transition), color var(--transition);
+}
+
+.btn-deconnexion:hover {
+  background: var(--color-active);
+  color: #fff;
+}
+
+.topbar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--topbar-h);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  z-index: 1030;
+  box-shadow: 0 2px 8px rgba(100,60,20,.07);
+}
+
+.topbar-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-active);
+}
+
+.btn-toggle {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--color-active);
+  padding: 4px 6px;
+  line-height: 1;
+  border-radius: 6px;
+}
+
+.btn-toggle:hover {
+  background: var(--color-bg-dark);
+}
+
+
+.main-content {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  transition: margin-left var(--transition);
+  margin-top: 2.5rem;
+}
+
+.page-heading {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(74, 55, 40, .45);
+  z-index: 1039;
+}
+
+.sidebar-overlay.visible {
+  display: block;
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE — breakpoint lg (992px)
+════════════════════════════════════════ */
+@media (max-width: 991.98px) {
+
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+
+  .sidebar.ouverte {
+    transform: translateX(0);
+  }
+
+  .topbar {
+    display: flex;
+  }
+
+
+  .main-content {
+    margin-left: 0;
+    padding-top: var(--topbar-h);
+  }
+}
+
+
+.overflow-y-auto::-webkit-scrollbar { width: 4px; }
+.overflow-y-auto::-webkit-scrollbar-track { background: transparent; }
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}

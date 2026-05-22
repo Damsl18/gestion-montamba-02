@@ -1,0 +1,60 @@
+²
+
+
+/* ── Variables ── */
+:root {
+  --sidebar-w: 260px;
+  --topbar-h: 60px;
+
+  --color-bg:       #faebd7;        /* couleur principale */
+  --color-bg-dark:  #f0d9be;        /* Légèrement plus sombre pour hover */
+  --color-bg-brand: #e8c9a0;        /* Ton chaud pour la brand zone */
+  --color-active:   #a0522d;        /* Sienna — actif/accent */
+  --color-active-bg:#f5deb3;        /* Wheat — fond lien actif */
+  --color-text:     #4a3728;        /* Brun foncé — texte principal */
+  --color-muted:    #9e7e6a;        /* Texte secondaire */
+  --color-border:   #ddc9b2;        /* Bordures subtiles */
+  --color-footer:   #ecdcc9;        /* Footer légèrement distinct */
+
+  --font-main: 'Nunito', sans-serif;
+  --radius: 10px;
+  --transition: .22s ease;
+}
+
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-main);
+  background: #fdf6ee;
+  color: var(--color-text);
+  margin: 0;
+  min-height: 100vh;
+}
+.promo{
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.promo:hover{
+    transform: translateY(-8px); 
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12); 
+    background-color: #e7efa5;
+}
+
+#scrollTop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #a0522d;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: none;
+  font-size: 18px;
+}
+
+.save{
+  margin-top: 2rem;
+}

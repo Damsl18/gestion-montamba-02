@@ -1,0 +1,6 @@
+{
+  "name": "Mont-Amba - Portail Parent",
+  "description": "Une plateforme sécurisée pour consulter les informations scolaires et gérer le paiement des frais de vos enfants.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
