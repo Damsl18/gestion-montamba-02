@@ -90,7 +90,7 @@
           <small class="user-role">Administrateur</small>
         </div>
       </div>
-      <a href="logout-admin.php" class="btn btn-deconnexion w-100">
+      <a href="logout.php" class="btn btn-deconnexion w-100">
         <i class="bi bi-box-arrow-left me-2"></i>Déconnexion
       </a>
     </div>

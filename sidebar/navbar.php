@@ -84,7 +84,7 @@
               <small class="user-role">Utilisateur</small>
             </div>
           </div>
-          <a href="logout-user.php" class="btn btn-deconnexion">
+          <a href="logout.php" class="btn btn-deconnexion">
             <i class="bi bi-box-arrow-left me-2"></i>Déconnexion
           </a>
         </div>

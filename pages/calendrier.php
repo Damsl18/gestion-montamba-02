@@ -57,6 +57,7 @@ $resultat = $request->fetchAll();
     <table class="table table-bordered table-striped align-middle text-center">
         <thead class="table-dark">
             <tr>
+                <th>ID</th>
                 <th>Jour</th>
                 <th>Date</th>
                 <th>Évènement</th>
@@ -66,6 +67,7 @@ $resultat = $request->fetchAll();
         <tbody>
             <?php foreach ($resultat as $ligne): ?>
             <tr>
+                <td><?= $ligne['id_calendrier'] ?></td>
                 <td><?= htmlspecialchars($ligne['jour']) ?></td>
                 <td><?= htmlspecialchars($ligne['dates']) ?></td>
                 <td><?= htmlspecialchars($ligne['evenement']) ?></td>
