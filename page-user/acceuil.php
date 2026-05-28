@@ -1,6 +1,6 @@
 
 <section class=" part1 mb-5 card shadow-sm p-5">
-    <h2 class="mb-4">Bienvenu au dans le premier systeme de gestion de paiement du <strong class="text-primary">Groupe Scolaire Mont-Amba</strong></h2>
+    <h2 class="mb-4">Bienvenu dans le premier système de gestion de paiement du <strong class="text-primary">Groupe Scolaire Mont-Amba</strong></h2>
     <p class="lead mb-3">Notre système digital a été spécialement conçu pour offrir aux parents une expérience de paiement
         sécurisée, rapide et transparente.
     </p>

@@ -11,6 +11,14 @@ if (isset($_GET['edit_id'])) {
 
 // Modification
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modifier'])) {
+    $cheminImage = "image/";
+    if(!file_exists($cheminImage)){
+        mkdir($cheminImage);
+    }
+    $nomImage = $_POST['image']['name'];
+    $ptmp = $_FILES['image']['tmp_name'];
+    $chemin = $cheminImage . basename($nomImage);
+    move_uploaded_file($ptmp, $chemin);
     $stmt = $connexion->prepare("UPDATE evenements SET classe_concernee=?, frais_transport=?, frais_entree=?, frais_encadrement=?, description=?, photo=? WHERE id_evenement=?");
     $stmt->execute([
         $_POST['classe_concernee'],
@@ -18,14 +26,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modifier'])) {
         $_POST['frais_entree'],
         $_POST['frais_encadrement'],
         $_POST['description'],
-        $_POST['photo'],
+        $nomImage,
         $_POST['id_evenement']
     ]);
+    if($stmt){
+        echo "<script>alert('Événement modifié avec succès');</script>";
+    }
     echo "<script>window.location='dashboard.php?page=events';</script>";
 }
 
 // Ajout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter'])) {
+    $cheminImage = "image/";
+    if(!file_exists($cheminImage)){
+        mkdir($cheminImage, 0755, true);
+    }
+    $nomImage = null;
+    if (!empty($_FILES['image']['name'])) {
+        $nomImage = $_FILES['image']['name'];
+        $ptmp = $_FILES['image']['tmp_name'];
+        $chemin = $cheminImage . basename($nomImage);
+        move_uploaded_file($ptmp, $chemin);
+    }
     $stmt = $connexion->prepare("INSERT INTO evenements (classe_concernee, frais_transport, frais_entree, frais_encadrement, description, photo) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->execute([
         $_POST['classe_concernee'],
@@ -33,8 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter'])) {
         $_POST['frais_entree'],
         $_POST['frais_encadrement'],
         $_POST['description'],
-        $_POST['photo']
+        $nomImage
     ]);
+    if($stmt){
+        echo "<script>alert('Événement ajouté avec succès');</script>";
+    }
     echo "<script>window.location='dashboard.php?page=events';</script>";
 }
 
@@ -106,7 +131,7 @@ $resultat = $request->fetchAll();
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST">
+                <form action="" method="POST" enctype="multipart/form-data">
                     <label class="form-label">Classe concernée</label>
                     <input type="text" name="classe_concernee" class="form-control mb-2" required>
                     <label class="form-label">Frais de transport</label>
@@ -117,8 +142,9 @@ $resultat = $request->fetchAll();
                     <input type="number" name="frais_encadrement" class="form-control mb-2" required>
                     <label class="form-label">Description</label>
                     <input type="text" name="description" class="form-control mb-2" required>
-                    <label class="form-label">Photo (URL)</label>
-                    <input type="text" name="photo" class="form-control mb-2">
+                    <label class="form-label">Photo</label>
+                    <input type="hidden" src="" alt="" name="image_actuelle" value="">
+                    <input type="file" name="image" class="form-control mb-2">
                     <button type="submit" name="ajouter" class="btn btn-success w-100">Enregistrer</button>
                 </form>
             </div>
@@ -136,7 +162,7 @@ $resultat = $request->fetchAll();
                     onclick="window.location='dashboard.php?page=events'"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST">
+                <form action="" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id_evenement" value="<?= $evenement_edit['id_evenement'] ?? '' ?>">
                     <label class="form-label">Classe concernée</label>
                     <input type="text" name="classe_concernee" class="form-control mb-2" value="<?= htmlspecialchars($evenement_edit['classe_concernee'] ?? '') ?>">
@@ -148,8 +174,8 @@ $resultat = $request->fetchAll();
                     <input type="number" name="frais_encadrement" class="form-control mb-2" value="<?= htmlspecialchars($evenement_edit['frais_encadrement'] ?? '') ?>">
                     <label class="form-label">Description</label>
                     <input type="text" name="description" class="form-control mb-2" value="<?= htmlspecialchars($evenement_edit['description'] ?? '') ?>">
-                    <label class="form-label">Photo (URL)</label>
-                    <input type="text" name="photo" class="form-control mb-2" value="<?= htmlspecialchars($evenement_edit['photo'] ?? '') ?>">
+                    <label class="form-label">Photo</label>
+                    <input type="file" name="image" class="form-control mb-2">
                     <button type="submit" name="modifier" class="btn btn-primary w-100">Modifier</button>
                 </form>
             </div>
@@ -162,3 +188,4 @@ $resultat = $request->fetchAll();
     new bootstrap.Modal(document.getElementById('modalEdit')).show();
 </script>
 <?php endif; ?>
+

@@ -18,7 +18,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['connecter'])){
             $_SESSION['id'] = $id;
             header('location:dashboard.php');
         } else {
-            $_SESSION['nom'] = $resultat['nom'];
+            $_SESSION['id_user'] = $resultat['id_user'];
             header('location:home.php');
         }
     }else{

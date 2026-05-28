@@ -1,9 +1,13 @@
 <?php
 session_start();
-if ( !isset($_SESSION['nom'])){
+require_once 'config.php';
+if ( !isset($_SESSION['id_user'])){
     header('location: index.php');
 } else {
     $page = isset($_GET['page']) ? $_GET['page'] : 'acceuil';
+    $req = $connexion -> prepare("SELECT * FROM users WHERE id_user = ?");
+    $req -> execute([$_SESSION['id_user']]);
+    $result = $req -> fetch();
     
 }
 ?>
@@ -32,10 +36,10 @@ if ( !isset($_SESSION['nom'])){
                     include 'page-user/commentpayer.php';
                     break;
                 case 'enfants':
-                    include 'page-user/enfants.php';
+                    include 'page-user/children.php';
                     break;
                 case 'paiement':
-                    include 'page-user/paiement.php';
+                    include 'page-user/pay.php';
                     break;
                 case 'evenement':
                     include 'page-user/event.php';
@@ -72,5 +76,6 @@ if ( !isset($_SESSION['nom'])){
     </footer>
     <script src="scroll.js"></script>
     <script src="bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="page-user/pay.js"></script>
 </body>
 </html>

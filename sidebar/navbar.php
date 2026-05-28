@@ -80,7 +80,7 @@
               <i class="bi bi-person-fill"></i>
             </div>
             <div class="text-end">
-              <div class="user-name"><?= $_SESSION['nom'] ?></div>
+              <div class="user-name"><?= $result['nom'] ?></div>
               <small class="user-role">Utilisateur</small>
             </div>
           </div>
