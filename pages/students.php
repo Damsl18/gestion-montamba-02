@@ -69,20 +69,20 @@ $sections = [
 <!-- En-tête -->
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h1 class="h4 mb-0">Gestion des élèves</h1>
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createEdit">
-        Créer un élève
-    </button>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createEdit">Créer un élève</button>
 </div>
 
-<!-- Navigation par classe -->
+<!-- BUG FIXÉ : list-group-horizontal ne passait pas en wrap correct sur petits écrans
+     → remplacé par un flex-wrap avec badges de navigation -->
 <nav class="mb-4">
-    <ul class="list-group list-group-flush list-group-horizontal flex-wrap text-center">
+    <div class="d-flex flex-wrap gap-2">
         <?php foreach ($sections as $s): ?>
-        <li class="promo list-group-item">
-            <a class="nav-link" href="#<?= $s['id'] ?>"><?= $s['titre'] ?></a>
-        </li>
+        <a href="#<?= $s['id'] ?>" class="badge text-decoration-none py-2 px-3"
+           style="background:var(--color-active-bg);color:var(--color-active);border:1px solid var(--color-border);border-radius:6px;font-size:12px;">
+            <?= $s['titre'] ?>
+        </a>
         <?php endforeach; ?>
-    </ul>
+    </div>
 </nav>
 
 <!-- Tables par section -->
@@ -91,8 +91,10 @@ $sections = [
     $stmt->execute([$s['classe'], $s['option']]);
     $lignes = $stmt->fetchAll();
 ?>
-<section class="my-5" id="<?= $s['id'] ?>">
-    <h2 class="h5 mb-3"><?= $s['titre'] ?></h2>
+<section class="my-4" id="<?= $s['id'] ?>">
+    <h2 class="h5 mb-3"><?= $s['titre'] ?>
+        <span class="badge bg-secondary ms-2"><?= count($lignes) ?></span>
+    </h2>
     <div class="table-responsive">
         <table class="table table-bordered table-striped align-middle text-center">
             <thead class="table-dark">
@@ -103,7 +105,7 @@ $sections = [
                     <th>Prénom</th>
                     <th>Classe</th>
                     <th>Option</th>
-                    <th>categorie</th>
+                    <th>Catégorie</th>
                     <th>Sexe</th>
                     <th>Parent</th>
                     <th>Statut</th>
@@ -111,6 +113,9 @@ $sections = [
                 </tr>
             </thead>
             <tbody>
+                <?php if(empty($lignes)): ?>
+                <tr><td colspan="11" class="text-muted fst-italic">Aucun élève dans cette section.</td></tr>
+                <?php endif; ?>
                 <?php foreach ($lignes as $ligne): ?>
                 <tr>
                     <td><?= $ligne['id_eleve'] ?></td>
@@ -118,17 +123,21 @@ $sections = [
                     <td><?= htmlspecialchars($ligne['post_nom']) ?></td>
                     <td><?= htmlspecialchars($ligne['prenom']) ?></td>
                     <td><?= htmlspecialchars($ligne['classe']) ?></td>
-                    <td><?= htmlspecialchars($ligne['options']) ?></td> 
+                    <td><?= htmlspecialchars($ligne['options']) ?></td>
                     <td><?= htmlspecialchars($ligne['categorie']) ?></td>
                     <td><?= htmlspecialchars($ligne['sexe']) ?></td>
                     <td><?= htmlspecialchars($ligne['id_user'] ?? '') ?></td>
                     <td><?= htmlspecialchars($ligne['statut'] ?? '') ?></td>
-                    <td>
-                        <a href="?page=students&edit_id=<?= $ligne['id_eleve'] ?>" class="btn btn-primary btn-sm">Editer</a>
+                    <td class="text-nowrap">
+                        <a href="?page=students&edit_id=<?= $ligne['id_eleve'] ?>" class="btn btn-primary btn-sm"  data-bs-toggle="modal" data-bs-target="#modalEdit">
+                            <i class="bi bi-pencil"></i>
+                        </a>
                         <form action="" method="post" class="d-inline">
                             <input type="hidden" name="delete_student" value="<?= $ligne['id_eleve'] ?>">
                             <button type="submit" class="btn btn-danger btn-sm" name="delete"
-                                onclick="return confirm('Supprimer cet élève ?')">Supprimer</button>
+                                onclick="return confirm('Supprimer cet élève ?')">
+                                <i class="bi bi-trash"></i>
+                            </button>
                         </form>
                     </td>
                 </tr>
@@ -140,11 +149,13 @@ $sections = [
 <?php endforeach; ?>
 
 <!-- MODALE EDITION -->
-<div class="modal fade" id="modalEdit" tabindex="-1">
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modifier un élève</h5>
+                <h5 class="modal-title" id="modalEditLabel">Modifier un élève</h5>
+                <!-- BUG FIXÉ : btn-close avec onclick redirect → comportement mixte.
+                     data-bs-dismiss gère la fermeture ; la redirection se fait côté PHP après submit -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                     onclick="window.location='dashboard.php?page=students'"></button>
             </div>
@@ -161,26 +172,29 @@ $sections = [
                     <input type="text" name="classe" class="form-control mb-2" value="<?= htmlspecialchars($student_edit['classe'] ?? '') ?>">
                     <label class="form-label">Option</label>
                     <input type="text" name="options" class="form-control mb-2" value="<?= htmlspecialchars($student_edit['options'] ?? '') ?>">
-                    <label class="form-label">Categorie</label>
+                    <label class="form-label">Catégorie</label>
                     <input type="text" name="categorie" class="form-control mb-2" value="<?= htmlspecialchars($student_edit['categorie'] ?? '') ?>">
                     <label class="form-label">Statut</label>
                     <input type="text" name="statut" class="form-control mb-2" value="<?= htmlspecialchars($student_edit['statut'] ?? '') ?>">
                     <label class="form-label">Sexe</label>
-                    <input type="text" name="sexe" class="form-control mb-2" value="<?= htmlspecialchars($student_edit['sexe'] ?? '') ?>">
+                    <select name="sexe" class="form-select mb-2">
+                        <option value="M" <?= ($student_edit['sexe'] ?? '') === 'M' ? 'selected' : '' ?>>M</option>
+                        <option value="F" <?= ($student_edit['sexe'] ?? '') === 'F' ? 'selected' : '' ?>>F</option>
+                    </select>
                     <label class="form-label">Parent</label>
-                    <select name="parent" class="form-control mb-2" required>
-                        <?php 
-                            $parent = $connexion->prepare("SELECT id_user FROM users");
+                    <select name="parent" class="form-select mb-2" required>
+                        <?php
+                            $parent = $connexion->prepare("SELECT id_user, nom FROM users WHERE type != 'admin'");
                             $parent->execute();
                             $parents = $parent->fetchAll();
-                            foreach ($parents as $parent):
+                            foreach ($parents as $p):
                         ?>
-                        <option value="<?= $parent['id_user'] ?>">
-                            <?= $parent['id_user'] ?>
+                        <option value="<?= $p['id_user'] ?>" <?= ($student_edit['id_user'] ?? '') == $p['id_user'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($p['id_user']) ?> — <?= htmlspecialchars($p['nom'] ?? '') ?>
                         </option>
                         <?php endforeach; ?>
                     </select>
-                    <button type="submit" name="modifier" class="btn btn-primary w-100">Modifier</button>
+                    <button type="submit" name="modifier" class="btn btn-primary w-100 mt-2">Modifier</button>
                 </form>
             </div>
         </div>
@@ -189,16 +203,17 @@ $sections = [
 
 <?php if (isset($_GET['edit_id']) && $student_edit): ?>
 <script>
-    new bootstrap.Modal(document.getElementById('modalEdit')).show();
+    var modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+    modalEdit.show();
 </script>
 <?php endif; ?>
 
 <!-- MODALE CREATION -->
-<div class="modal fade" id="createEdit" tabindex="-1">
+<div class="modal fade" id="createEdit" tabindex="-1" aria-labelledby="createEditLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Créer un élève</h5>
+                <h5 class="modal-title" id="createEditLabel">Créer un élève</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -210,7 +225,8 @@ $sections = [
                     <label class="form-label">Prénom</label>
                     <input type="text" name="prenom" class="form-control mb-2" placeholder="Entrez le prénom" required>
                     <label class="form-label">Classe</label>
-                    <select name="classe" class="form-control mb-2" required>
+                    <!-- BUG FIXÉ : form-control → form-select (Bootstrap 5) -->
+                    <select name="classe" class="form-select mb-2" required>
                         <option value="7e">7e</option>
                         <option value="8e">8e</option>
                         <option value="1ère">1ère</option>
@@ -219,38 +235,38 @@ $sections = [
                         <option value="4ème">4ème</option>
                     </select>
                     <label class="form-label">Option</label>
-                    <select name="option" class="form-control mb-2" required>
+                    <select name="option" class="form-select mb-2" required>
                         <option value="Education de base A">Education de base A</option>
                         <option value="Education de base B">Education de base B</option>
                         <option value="Scientifique">Scientifique</option>
                         <option value="Littéraire">Littéraire</option>
                         <option value="Commerciale">Commerciale</option>
                     </select>
-                    <label class="form-label">Categorie</label>
-                    <select name="categorie" class="form-control mb-2" required>
+                    <label class="form-label">Catégorie</label>
+                    <select name="categorie" class="form-select mb-2" required>
                         <option value="ORPUK">ORPUK</option>
                         <option value="Extérieur">Extérieur</option>
                         <option value="Autres">Autres</option>
                     </select>
                     <label class="form-label">Sexe</label>
-                    <select name="sexe" class="form-control mb-2" required>
+                    <select name="sexe" class="form-select mb-2" required>
                         <option value="M">M</option>
                         <option value="F">F</option>
                     </select>
                     <label class="form-label">Parent</label>
-                    <select name="parent" class="form-control mb-2" required>
-                        <?php 
-                            $parent = $connexion->prepare("SELECT id_user FROM users");
+                    <select name="parent" class="form-select mb-2" required>
+                        <?php
+                            $parent = $connexion->prepare("SELECT id_user, nom FROM users WHERE type != 'admin'");
                             $parent->execute();
                             $parents = $parent->fetchAll();
-                            foreach ($parents as $parent):
+                            foreach ($parents as $p):
                         ?>
-                        <option value="<?= $parent['id_user'] ?>">
-                            <?= $parent['id_user'] ?>
+                        <option value="<?= $p['id_user'] ?>">
+                            <?= htmlspecialchars($p['id_user']) ?> — <?= htmlspecialchars($p['nom'] ?? '') ?>
                         </option>
                         <?php endforeach; ?>
                     </select>
-                    <button type="submit" name="create" class="btn btn-success w-100">Créer</button>
+                    <button type="submit" name="create" class="btn btn-success w-100 mt-2">Créer</button>
                 </form>
             </div>
         </div>

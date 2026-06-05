@@ -13,25 +13,26 @@ if (isset($_GET['edit_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modifier'])) {
     $stmt = $connexion->prepare("UPDATE users SET nom=?, post_nom=?, prenom=?, adresse=?, telephone=? WHERE id_user=?");
     $stmt->execute([
-        $_POST['nom'],
-        $_POST['post_nom'],
-        $_POST['prenom'],
-        $_POST['adresse'],
-        $_POST['telephone'],
-        $_POST['id_user']
+        htmlspecialchars($_POST['nom']),
+        htmlspecialchars($_POST['post_nom']),
+        htmlspecialchars($_POST['prenom']),
+        htmlspecialchars($_POST['adresse']),
+        htmlspecialchars($_POST['telephone']),
+        htmlspecialchars($_POST['id_user'])
     ]);
     echo "<script>window.location='dashboard.php?page=users';</script>";
 }
 
 // Ajout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter'])) {
-    $stmt = $connexion->prepare("INSERT INTO users (nom, post_nom, prenom, adresse, telephone) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $connexion->prepare("INSERT INTO users (nom, post_nom, prenom, adresse, telephone, password) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->execute([
-        $_POST['nom'],
-        $_POST['post_nom'],
-        $_POST['prenom'],
-        $_POST['adresse'],
-        $_POST['telephone']
+        htmlspecialchars($_POST['nom']),
+        htmlspecialchars($_POST['post_nom']),
+        htmlspecialchars($_POST['prenom']),
+        htmlspecialchars($_POST['adresse']),
+        htmlspecialchars($_POST['telephone']),
+        password_hash($_POST['password'], PASSWORD_DEFAULT)
     ]);
     echo "<script>window.location='dashboard.php?page=users';</script>";
 }
@@ -80,7 +81,7 @@ $resultat = $request->fetchAll();
                 <td><?= htmlspecialchars($ligne['adresse']) ?></td>
                 <td><?= htmlspecialchars($ligne['telephone']) ?></td>
                 <td>
-                    <a href="?page=users&edit_id=<?= $ligne['id_user'] ?>" class="btn btn-primary btn-sm">Editer</a>
+                    <a href="?page=users&edit_id=<?= $ligne['id_user'] ?>" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEdit">Editer</a>
                     <form action="" method="post" class="d-inline">
                         <input type="hidden" name="delete_user" value="<?= $ligne['id_user'] ?>">
                         <button type="submit" class="btn btn-danger btn-sm" name="delete"
@@ -113,6 +114,8 @@ $resultat = $request->fetchAll();
                     <input type="text" name="adresse" class="form-control mb-2" required>
                     <label class="form-label">Téléphone</label>
                     <input type="text" name="telephone" class="form-control mb-2" required>
+                    <label class="form-label">Mot de passe</label>
+                    <input type="text" name="password" class="form-control mb-2" required>
                     <button type="submit" name="ajouter" class="btn btn-success w-100">Enregistrer</button>
                 </form>
             </div>

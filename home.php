@@ -3,30 +3,34 @@ session_start();
 require_once 'config.php';
 if ( !isset($_SESSION['id_user'])){
     header('location: index.php');
+    exit;
 } else {
     $page = isset($_GET['page']) ? $_GET['page'] : 'acceuil';
     $req = $connexion -> prepare("SELECT * FROM users WHERE id_user = ?");
     $req -> execute([$_SESSION['id_user']]);
     $result = $req -> fetch();
-    
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord</title>
+    <title>Espace Parent — Groupe Scolaire Mont-Amba</title>
+
     <link rel="stylesheet" href="bootstrap-5.3.8-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="sidebar/nav.css">
 
-    <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Font Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <?php include 'sidebar/navbar.php'; ?>
-    <main class="main-content p-4">
+
+    <main class="main-content p-3 p-md-4">
         <?php
             switch ($page) {
                 case 'acceuil':
@@ -47,35 +51,47 @@ if ( !isset($_SESSION['id_user'])){
                 case 'calendrier':
                     include 'page-user/calendrier.php';
                     break;
-                
                 default:
-                    echo "<h1>Page non trouvée</h1>";
+                    echo "<div class='alert alert-warning'>Page non trouvée</div>";
             }
         ?>
     </main>
-    <button id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <a href="#top" class = "text-decoration-none text-white">↑</a>
+
+    <!-- Bouton retour haut -->
+    <button id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+            class="btn btn-secondary position-fixed bottom-0 end-0 m-3 rounded-circle"
+            style="width:44px;height:44px;display:none;z-index:900;">
+        ↑
     </button>
-    <footer class="footer mt-auto py-4 bg-light">
+
+    <footer class="footer mt-auto py-4 bg-light border-top">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-12 col-md-4 col-lg-3 mb-3 mb-md-0 text-center text-md-start">
-                    <img src="./images/logo-removebg-preview.png" class="img-fluid w-25 h-25" alt="ici logo">
+            <div class="row align-items-center gy-2">
+                <div class="col-12 col-md-4 text-center text-md-start">
+                    <img src="./images/logo-removebg-preview.png" class="img-fluid" style="max-height:50px;" alt="Logo Mont-Amba">
                 </div>
-                <div class="col-12 col-md-4 col-lg-3 text-center mb-md-0 text-md-start">
+                <div class="col-12 col-md-4 text-center">
                     <span class="text-muted">&copy; 2026 ~ Groupe Scolaire Mont-Amba</span><br>
                     <span class="text-muted">Groupe SILLKLMTMM</span>
                 </div>
-                <div class="col-12 col-md-4 col-lg-3 text-center text-md-end">
+                <div class="col-12 col-md-4 text-center text-md-end">
                     <a href="#" class="text-muted me-3">Mentions légales</a>
-                    <a href="#" class="text-muted me-3">Politique de conidentialité</a>
-                    <a href="https://wa.me/+243842555645" target="_blank" class="text-muted">Contact </a>
+                    <!-- BUG FIXÉ : "conidentialité" → "confidentialité" -->
+                    <a href="#" class="text-muted me-3">Politique de confidentialité</a>
+                    <a href="https://wa.me/+243842555645" target="_blank" rel="noopener" class="text-muted">Contact</a>
                 </div>
             </div>
         </div>
     </footer>
-    <script src="scroll.js"></script>
+
+    <!-- BUG FIXÉ : un seul script Bootstrap bundle, chemin correct depuis la racine -->
     <script src="bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
     <script src="page-user/pay.js"></script>
+    <!-- BUG FIXÉ : scroll.js inexistant → logique inline -->
+    <script>
+        window.addEventListener('scroll', function() {
+            document.getElementById('scrollTop').style.display = window.scrollY > 300 ? 'block' : 'none';
+        });
+    </script>
 </body>
 </html>

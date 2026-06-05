@@ -1,25 +1,22 @@
-
-
 /* ── Variables ── */
 :root {
   --sidebar-w: 260px;
   --topbar-h: 60px;
 
-  --color-bg:       #faebd7;        /* couleur principale */
-  --color-bg-dark:  #f0d9be;        /* Légèrement plus sombre pour hover */
-  --color-bg-brand: #e8c9a0;        /* Ton chaud pour la brand zone */
-  --color-active:   #a0522d;        /* Sienna — actif/accent */
-  --color-active-bg:#f5deb3;        /* Wheat — fond lien actif */
-  --color-text:     #4a3728;        /* Brun foncé — texte principal */
-  --color-muted:    #9e7e6a;        /* Texte secondaire */
-  --color-border:   #ddc9b2;        /* Bordures subtiles */
-  --color-footer:   #ecdcc9;        /* Footer légèrement distinct */
+  --color-bg:       #faebd7;
+  --color-bg-dark:  #f0d9be;
+  --color-bg-brand: #e8c9a0;
+  --color-active:   #a0522d;
+  --color-active-bg:#f5deb3;
+  --color-text:     #4a3728;
+  --color-muted:    #9e7e6a;
+  --color-border:   #ddc9b2;
+  --color-footer:   #ecdcc9;
 
   --font-main: 'Nunito', sans-serif;
   --radius: 10px;
   --transition: .22s ease;
 }
-
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -31,6 +28,7 @@ body {
   min-height: 100vh;
 }
 
+/* ── Sidebar ── */
 .sidebar {
   position: fixed;
   top: 0;
@@ -66,6 +64,7 @@ body {
   letter-spacing: -.3px;
 }
 
+/* ── Liens de navigation ── */
 .sidebar-link {
   display: flex;
   align-items: center;
@@ -123,7 +122,6 @@ body {
   flex-shrink: 0;
 }
 
-/* le nom d'utilisateur */
 .user-name {
   font-size: 13px !important;
   font-weight: 700 !important;
@@ -138,7 +136,7 @@ body {
   display: block;
 }
 
-/* Bouton de déconnexion */
+/* ── Bouton déconnexion ── */
 .btn-deconnexion {
   background: transparent;
   border: 1.5px solid var(--color-active);
@@ -155,8 +153,9 @@ body {
   color: #fff;
 }
 
+/* ── Topbar mobile ── */
 .topbar {
-  display: none;
+  display: none; /* caché sur desktop, affiché via media query */
   position: fixed;
   top: 0;
   left: 0;
@@ -174,6 +173,7 @@ body {
   color: var(--color-active);
 }
 
+/* BUG FIXÉ : btn-toggle n'avait pas de cursor pointer visible */
 .btn-toggle {
   background: none;
   border: none;
@@ -182,18 +182,20 @@ body {
   padding: 4px 6px;
   line-height: 1;
   border-radius: 6px;
+  cursor: pointer;
 }
 
 .btn-toggle:hover {
   background: var(--color-bg-dark);
 }
 
-
+/* ── Contenu principal ── */
+/* BUG FIXÉ : margin-top: 2.5rem codé en dur dans dashboard.php causait un
+   décalage parasite sur desktop. Retiré d'ici, géré uniquement en responsive. */
 .main-content {
   margin-left: var(--sidebar-w);
   min-height: 100vh;
   transition: margin-left var(--transition);
-  margin-top: 2.5rem;
 }
 
 .page-heading {
@@ -203,7 +205,7 @@ body {
   margin-bottom: 6px;
 }
 
-
+/* ── Overlay ── */
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -221,27 +223,28 @@ body {
 ════════════════════════════════════════ */
 @media (max-width: 991.98px) {
 
+  /* BUG FIXÉ : sidebar masquée par translation sur mobile */
   .sidebar {
     transform: translateX(-100%);
   }
-
 
   .sidebar.ouverte {
     transform: translateX(0);
   }
 
+  /* BUG FIXÉ : topbar visible uniquement sur mobile */
   .topbar {
     display: flex;
   }
 
-
+  /* BUG FIXÉ : main-content sans margin gauche + padding-top = hauteur topbar */
   .main-content {
     margin-left: 0;
-    padding-top: var(--topbar-h);
+    padding-top: calc(var(--topbar-h) + 0.5rem);
   }
 }
 
-
+/* ── Scrollbar fine ── */
 .overflow-y-auto::-webkit-scrollbar { width: 4px; }
 .overflow-y-auto::-webkit-scrollbar-track { background: transparent; }
 .overflow-y-auto::-webkit-scrollbar-thumb {

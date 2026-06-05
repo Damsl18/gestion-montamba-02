@@ -2,98 +2,98 @@
   --sidebar-w: 260px;
   --topbar-h: 60px;
 
-  --color-bg:       #f9f0e5;        /* couleur principale */
-  --color-bg-dark:  #f0d9be;        /* Légèrement plus sombre pour hover */
-  --color-bg-brand: #e8c9a0;        /* Ton chaud pour la brand zone */
-  --color-active:   #a0522d;        /* Sienna — actif/accent */
-  --color-active-bg:#f5deb3;        /* Wheat — fond lien actif */
-  --color-text:     #4a3728;        /* Brun foncé — texte principal */
-  --color-muted:    #9e7e6a;        /* Texte secondaire */
-  --color-border:   #ddc9b2;        /* Bordures subtiles */
-  --color-footer:   #ecdcc9;        /* Footer légèrement distinct */
+  --color-bg:       #f9f0e5;
+  --color-bg-dark:  #f0d9be;
+  --color-bg-brand: #e8c9a0;
+  --color-active:   #a0522d;
+  --color-active-bg:#f5deb3;
+  --color-text:     #4a3728;
+  --color-muted:    #9e7e6a;
+  --color-border:   #ddc9b2;
+  --color-footer:   #ecdcc9;
 
   --font-main: 'Nunito', sans-serif;
   --radius: 10px;
   --transition: .22s ease;
 }
 
-body{
+body {
     background-color: var(--color-bg);
     font-family: var(--font-main);
     margin: 0;
     padding: 0;
-    height: 100vh;
+    min-height: 100vh; /* BUG FIXÉ : height:100vh → min-height pour éviter coupure sur petits écrans */
 }
 
-.container{
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+/* BUG FIXÉ : suppression du .container custom qui écrasait Bootstrap,
+   la mise en page centrée est maintenant gérée par les classes Bootstrap dans le HTML */
 
-.login-box{
-
-    width: 400px;
-    padding: 90px;
-
+.login-box {
+    /* BUG FIXÉ : width fixe 400px + padding:90px → width max + padding responsive */
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem; /* padding raisonnable */
     background: #ecdcc9;
     border-radius: 15px;
     backdrop-filter: blur(10px);
-
-    border: 1px solid #ddc9b2;
-
-    color: #4a3728;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
 }
 
-.form-control{
+/* Responsive : sur petits écrans, padding réduit */
+@media (max-width: 480px) {
+    .login-box {
+        padding: 1.5rem 1rem;
+        border-radius: 10px;
+    }
+}
 
+.form-control {
     background: #ecdcc9;
     border: 1px solid #ddc9b2;
     color: #4a3728;
 }
 
-.form-control::placeholder{
+.form-control::placeholder {
     color: #9e7e6a;
 }
 
-.form-control:focus{
-
+.form-control:focus {
     background: #ecdcc9;
     color: #4a3728;
-
     box-shadow: none;
+    border-color: var(--color-active);
 }
 
-label{
+label {
     color: #4a3728;
 }
 
-h2{
+h2 {
     color: #4a3728;
-}
-
-.btn-primary{
-    background-color:#a0522d;
-    border: none;
-}
-
-.btn-primary:hover{
-    background-color: #f0d9be;
-}
-
-h2{
     font-size: 22px;
 }
 
-label{
+.btn-primary {
+    background-color: #a0522d;
+    border: none;
+}
+
+/* BUG FIXÉ : hover btn-primary utilisait --color-bg-dark (#f0d9be, clair) → texte illisible ;
+   maintenant couleur plus foncée avec texte blanc */
+.btn-primary:hover {
+    background-color: #7a3f22;
+    color: #fff;
+}
+
+label {
     font-size: 14px;
 }
 
-.form-control{
+.form-control {
     font-size: 14px;
 }
 
-.btn{
+.btn {
     font-size: 14px;
 }

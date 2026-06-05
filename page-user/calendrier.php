@@ -4,7 +4,9 @@ $requete = $connexion->prepare("SELECT * FROM calendriers");
 $requete->execute();
 $resultat = $requete->fetchAll();
 ?>
-<h1>Voici le Calendrier Scolaire pour l'année 2025-2026</h1>
+
+<h2 class="mb-4">Calendrier Scolaire — Année 2025-2026</h2>
+
 <div class="table-responsive">
     <table class="table table-bordered table-striped align-middle text-center">
         <thead class="table-dark">
@@ -17,7 +19,7 @@ $resultat = $requete->fetchAll();
         <tbody>
             <?php if(!$resultat): ?>
                 <tr>
-                    <td colspan="4">Aucun évènement trouvé.</td>
+                    <td colspan="3">Aucun évènement trouvé.</td>
                 </tr>
             <?php else: ?>
                 <?php foreach ($resultat as $ligne): ?>
@@ -31,4 +33,5 @@ $resultat = $requete->fetchAll();
         </tbody>
     </table>
 </div>
-<script src="./styles/bootstrap.bundle.min.js"></script>
+
+<!-- BUG FIXÉ : suppression du <script src="./styles/bootstrap.bundle.min.js"> redondant -->
