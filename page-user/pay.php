@@ -252,31 +252,35 @@
             <h2 class="fw-bold">Derniers paiements</h2>
             <?php $r2 = $connexion -> prepare("SELECT * FROM paiements WHERE id_user = ?");
                   $r2 -> execute ([$_SESSION['id_user']]);
-                  $response = $r2 -> fetchAll();  
+                  $response = $r2 -> fetchAll();
             ?>
-            <?php foreach($response as $ligne): ?>
-                <div class="card shadow border-0 mb-5;">
-                    <div class="card-body p-3 p-md-5 ">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title"><?= htmlspecialchars($ligne['id_eleve']) ?></h5>
-                            <p class="card-text text-muted small mb-1">
-                                <i class="bi bi-people me-1"></i>Methode de paiement : <?= htmlspecialchars($ligne['mode_paiement']) ?>
-                            </p>
-                            <p class="card-text fw-bold mt-auto mb-3">
-                                <i class="bi bi-cash me-1 text-success"></i>
-                                Montant payé :
-                                <?= htmlspecialchars($ligne['montant']) ?> $
-                            </p>
-                            <?php // recupération du nom de l'évènement
-                                $r3 = $connexion -> prepare ("SELECT description FROM evenements WHERE id_evenement = ?");
-                                $r3 -> execute ([$ligne['id_evenement']]);
-                                $name = $r3 -> fetchColumn();
-                            ?>
-                            <h5 class="card-title"><?= htmlspecialchars($name) ?></h5>
+            <?php if(empty($response)): ?>
+                <h5 class="card-title">Aucun paiement recent pour le moment.</h5>
+            <?php else: ?>
+                <?php foreach($response as $ligne): ?>
+                    <div class="card shadow border-0 mb-5;">
+                        <div class="card-body p-3 p-md-5 ">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><?= htmlspecialchars($ligne['id_eleve']) ?></h5>
+                                <p class="card-text text-muted small mb-1">
+                                    <i class="bi bi-people me-1"></i>Methode de paiement : <?= htmlspecialchars($ligne['mode_paiement']) ?>
+                                </p>
+                                <p class="card-text fw-bold mt-auto mb-3">
+                                    <i class="bi bi-cash me-1 text-success"></i>
+                                    Montant payé :
+                                    <?= htmlspecialchars($ligne['montant']) ?> $
+                                </p>
+                                <?php // recupération du nom de l'évènement
+                                    $r3 = $connexion -> prepare ("SELECT description FROM evenements WHERE id_evenement = ?");
+                                    $r3 -> execute ([$ligne['id_evenement']]);
+                                    $name = $r3 -> fetchColumn();
+                                ?>
+                                <h5 class="card-title"><?= htmlspecialchars($name) ?></h5>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach ?>
+                <?php endforeach ?>
+            <?php endif; ?>
         </div>
     </div>
 </div>

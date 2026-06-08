@@ -75,7 +75,7 @@ $resultat = $request->fetchAll();
 ?>
 
 <!-- En-tête -->
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+<div class="container px-0 py-5 d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h1 class="h4 mb-0">Gestion des événements</h1>
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAjout">
         <i class="bi bi-plus-circle me-1"></i>Ajouter un événement
@@ -117,7 +117,7 @@ $resultat = $request->fetchAll();
                     <?php endif; ?>
                 </td>
                 <td class="text-nowrap">
-                    <a href="?page=events&edit_id=<?= $ligne['id_evenement'] ?>" class="btn btn-primary btn-sm"  data-bs-toggle="modal" data-bs-target="#modalEdit">
+                    <a href="?page=events&edit_id=<?= $ligne['id_evenement'] ?>" class="btn btn-primary btn-sm">
                         <i class="bi bi-pencil"></i>
                     </a>
                     <form action="" method="post" class="d-inline">
@@ -196,8 +196,10 @@ $resultat = $request->fetchAll();
 </div>
 
 <?php if (isset($_GET['edit_id']) && $evenement_edit): ?>
-<script>
-    var modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
-    modalEdit.show();
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            var modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+            modalEdit.show();
+        });
+    </script>
 <?php endif; ?>

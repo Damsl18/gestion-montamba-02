@@ -45,7 +45,7 @@ $resultat = $request->fetchAll();
 ?>
 
 <!-- En-tête -->
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+<div class="container px-0 py-5 d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h1 class="h4 mb-0">Gestion du calendrier scolaire</h1>
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAjout">
         Ajouter une date
@@ -72,7 +72,7 @@ $resultat = $request->fetchAll();
                 <td><?= htmlspecialchars($ligne['dates']) ?></td>
                 <td><?= htmlspecialchars($ligne['evenement']) ?></td>
                 <td>
-                    <a href="?page=calendrier&edit_id=<?= $ligne['id_calendrier'] ?>" class="btn btn-primary btn-sm"  data-bs-toggle="modal" data-bs-target="#modalEdit">Editer</a>
+                    <a href="?page=calendrier&edit_id=<?= $ligne['id_calendrier'] ?>" class="btn btn-primary btn-sm">Editer</a>
                     <form action="" method="post" class="d-inline">
                         <input type="hidden" name="delete_calendar" value="<?= $ligne['id_calendrier'] ?>">
                         <button type="submit" class="btn btn-danger btn-sm" name="delete"
@@ -143,7 +143,10 @@ $resultat = $request->fetchAll();
 </div>
 
 <?php if (isset($_GET['edit_id']) && $calendrier_edit): ?>
-<script>
-    new bootstrap.Modal(document.getElementById('modalEdit')).show();
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            var modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+            modalEdit.show();
+        });
+    </script>
 <?php endif; ?>

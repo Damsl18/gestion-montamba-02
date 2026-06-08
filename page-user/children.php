@@ -31,8 +31,14 @@
                                 <li><span class="fw-semibold">Catégorie :</span> <?= htmlspecialchars($ligne['categorie']) ?></li>
                                 <li><span class="fw-semibold">Sexe :</span> <?= htmlspecialchars($ligne['sexe']) ?></li>
                                 <li>
-                                    <span class="fw-semibold">Statut :</span>
-                                    <?= htmlspecialchars($ligne['statut']) ?>
+                                    <span class="fw-semibold">Statut :
+                                        <?php if($ligne['statut'] === 'Payé'): ?>
+                                            <strong class="text-success"><?= htmlspecialchars($ligne['statut']) ?></strong>
+                                        <?php else: ?>
+                                            <strong class="text-danger"><?= htmlspecialchars($ligne['statut']) ?></strong>
+                                        <?php endif; ?>
+
+                                    </span>
                                 </li>
                             </ul>
                         </div>

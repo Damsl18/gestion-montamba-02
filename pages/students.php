@@ -15,13 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['create'])) {
     echo "<script>window.location='dashboard.php?page=students';</script>";
 }
 
+//pour l'édition d'un élève
 $student_edit = null;
 if (isset($_GET['edit_id'])) {
+    $id_eleve = $_GET['edit_id'];
     $stmt = $connexion->prepare("SELECT * FROM eleves WHERE id_eleve = ?");
-    $stmt->execute([$_GET['edit_id']]);
+    $stmt->execute([$id_eleve]);
     $student_edit = $stmt->fetch();
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modifier'])) {
     $stmt = $connexion->prepare("UPDATE eleves SET nom=?, prenom=?, post_nom=?, classe=?, options=?, categorie=?, sexe=?, id_user=? WHERE id_eleve=?");
     $stmt->execute([
@@ -31,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modifier'])) {
     ]);
     echo "<script>window.location='dashboard.php?page=students';</script>";
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
     $id_eleve = $_POST['delete_student'];
@@ -67,13 +69,11 @@ $sections = [
 ?>
 
 <!-- En-tête -->
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+<div class="container px-0 py-5 d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h1 class="h4 mb-0">Gestion des élèves</h1>
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createEdit">Créer un élève</button>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createEdit">Ajouter un élève</button>
 </div>
 
-<!-- BUG FIXÉ : list-group-horizontal ne passait pas en wrap correct sur petits écrans
-     → remplacé par un flex-wrap avec badges de navigation -->
 <nav class="mb-4">
     <div class="d-flex flex-wrap gap-2">
         <?php foreach ($sections as $s): ?>
@@ -127,11 +127,16 @@ $sections = [
                     <td><?= htmlspecialchars($ligne['categorie']) ?></td>
                     <td><?= htmlspecialchars($ligne['sexe']) ?></td>
                     <td><?= htmlspecialchars($ligne['id_user'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($ligne['statut'] ?? '') ?></td>
+                    <td><?php if($ligne['statut'] === 'Payé'): ?>
+                            <strong class="text-success"><?= htmlspecialchars($ligne['statut']) ?></strong>
+                            <?php else: ?>
+                            <strong class="text-danger"><?= htmlspecialchars($ligne['statut']) ?></strong>
+                        <?php endif; ?>
+                    </td>
                     <td class="text-nowrap">
-                        <a href="?page=students&edit_id=<?= $ligne['id_eleve'] ?>" class="btn btn-primary btn-sm"  data-bs-toggle="modal" data-bs-target="#modalEdit">
+                        <a href="?page=students&edit_id=<?= $ligne['id_eleve'] ?>" class="btn btn-primary btn-sm" id="edit_btn">
                             <i class="bi bi-pencil"></i>
-                        </a>
+                        </a> 
                         <form action="" method="post" class="d-inline">
                             <input type="hidden" name="delete_student" value="<?= $ligne['id_eleve'] ?>">
                             <button type="submit" class="btn btn-danger btn-sm" name="delete"
@@ -154,12 +159,10 @@ $sections = [
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalEditLabel">Modifier un élève</h5>
-                <!-- BUG FIXÉ : btn-close avec onclick redirect → comportement mixte.
-                     data-bs-dismiss gère la fermeture ; la redirection se fait côté PHP après submit -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                     onclick="window.location='dashboard.php?page=students'"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body">    
                 <form action="" method="POST">
                     <input type="hidden" name="id_eleve" value="<?= $student_edit['id_eleve'] ?? '' ?>">
                     <label class="form-label">Nom</label>
@@ -169,11 +172,31 @@ $sections = [
                     <label class="form-label">Prénom</label>
                     <input type="text" name="prenom" class="form-control mb-2" value="<?= htmlspecialchars($student_edit['prenom'] ?? '') ?>">
                     <label class="form-label">Classe</label>
-                    <input type="text" name="classe" class="form-control mb-2" value="<?= htmlspecialchars($student_edit['classe'] ?? '') ?>">
+                    <select name="classe" class="form-select mb-2" required>
+                        <option value="<?= htmlspecialchars($student_edit['classe'] ?? '') ?>"><?= htmlspecialchars($student_edit['classe'] ?? '') ?></option>
+                        <option value="7e">7e</option>
+                        <option value="8e">8e</option>
+                        <option value="1ère">1ère</option>
+                        <option value="2ème">2ème</option>
+                        <option value="3ème">3ème</option>
+                        <option value="4ème">4ème</option>
+                    </select>
                     <label class="form-label">Option</label>
-                    <input type="text" name="options" class="form-control mb-2" value="<?= htmlspecialchars($student_edit['options'] ?? '') ?>">
+                    <select name="option" class="form-select mb-2" required>
+                        <option value="<?= htmlspecialchars($student_edit['options'] ?? '') ?>"><?= htmlspecialchars($student_edit['options'] ?? '') ?></option>
+                        <option value="Education de base A">Education de base A</option>
+                        <option value="Education de base B">Education de base B</option>
+                        <option value="Scientifique">Scientifique</option>
+                        <option value="Littéraire">Littéraire</option>
+                        <option value="Commerciale">Commerciale</option>
+                    </select>
                     <label class="form-label">Catégorie</label>
-                    <input type="text" name="categorie" class="form-control mb-2" value="<?= htmlspecialchars($student_edit['categorie'] ?? '') ?>">
+                    <select name="categorie" class="form-select mb-2" required>
+                        <option value="<?= htmlspecialchars($student_edit['categorie'] ?? '') ?>"><?= htmlspecialchars($student_edit['categorie'] ?? '') ?></option>
+                        <option value="ORPUK">ORPUK</option>
+                        <option value="Extérieur">Extérieur</option>
+                        <option value="Autres">Autres</option>
+                    </select>
                     <label class="form-label">Statut</label>
                     <input type="text" name="statut" class="form-control mb-2" value="<?= htmlspecialchars($student_edit['statut'] ?? '') ?>">
                     <label class="form-label">Sexe</label>
@@ -202,10 +225,12 @@ $sections = [
 </div>
 
 <?php if (isset($_GET['edit_id']) && $student_edit): ?>
-<script>
-    var modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
-    modalEdit.show();
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            var modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+            modalEdit.show();
+        });
+    </script>
 <?php endif; ?>
 
 <!-- MODALE CREATION -->
@@ -225,7 +250,6 @@ $sections = [
                     <label class="form-label">Prénom</label>
                     <input type="text" name="prenom" class="form-control mb-2" placeholder="Entrez le prénom" required>
                     <label class="form-label">Classe</label>
-                    <!-- BUG FIXÉ : form-control → form-select (Bootstrap 5) -->
                     <select name="classe" class="form-select mb-2" required>
                         <option value="7e">7e</option>
                         <option value="8e">8e</option>

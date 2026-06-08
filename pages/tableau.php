@@ -25,8 +25,7 @@ $prochaines_dates = $q->fetchAll();
 <h1 class="h4 mb-4">Tableau de bord</h1>
 
 <!-- Cartes statistiques -->
-<div class="row g-3 mb-4">
-
+<div class="container px-0 py-2 row g-3 mb-4">
     <div class="col-12 col-sm-6 col-lg-3">
         <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid var(--color-active) !important;">
             <div class="card-body d-flex align-items-center gap-3">
